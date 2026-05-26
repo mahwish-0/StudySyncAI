@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>StudySync AI</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Inter,sans-serif;
+}
+
+body{
+background:#f6f8fc;
+display:flex;
+min-height:100vh;
+color:#111827;
+}
+
+.sidebar{
+width:260px;
+background:linear-gradient(180deg,#2563eb,#7c3aed);
+padding:30px 20px;
+color:white;
+position:fixed;
+top:0;
+bottom:0;
+left:0;
+}
+
+.logo{
+font-size:28px;
+font-weight:800;
+margin-bottom:40px;
+}
+
+.sidebar a{
+display:block;
+padding:14px;
+margin-bottom:10px;
+border-radius:12px;
+text-decoration:none;
+color:white;
+font-weight:600;
+transition:0.3s;
+}
+
+.sidebar a:hover{
+background:rgba(255,255,255,0.15);
+}
+
+.main{
+margin-left:260px;
+flex:1;
+padding:30px;
+}
+
+.topbar{
+background:white;
+padding:18px 25px;
+border-radius:18px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+box-shadow:0 8px 25px rgba(0,0,0,0.06);
+margin-bottom:25px;
+}
+
+.content{
+animation:fade .5s ease;
+}
+
+@keyframes fade{
+from{opacity:0;transform:translateY(10px);}
+to{opacity:1;transform:translateY(0);}
+}
+
+.card{
+background:white;
+padding:25px;
+border-radius:22px;
+box-shadow:0 8px 25px rgba(0,0,0,0.06);
+margin-bottom:20px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="sidebar">
+<div class="logo">StudySync AI</div>
+
+<a href="/">Dashboard</a>
+<a href="/planner/">Planner</a>
+<a href="/timetable/">Timetable</a>
+<a href="/analytics/">Analytics</a>
+<a href="/logout/">Logout</a>
+</div>
+
+<div class="main">
+
+<div class="topbar">
+<div>
+Welcome, <b>{{ request.user.username }}</b>
+</div>
+
+<div>
+Smart Study Planner
+</div>
+</div>
+
+<div class="content">
+{% block content %}
+{% endblock %}
+</div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,57 @@
+{% extends 'planner/base.html' %}
+
+{% block content %}
+
+<h1 style="font-size:34px;font-weight:800;margin-bottom:20px;">
+Dashboard
+</h1>
+
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:25px;">
+
+<div class="card">
+<h3>Total Tasks</h3>
+<h1>{{ total_tasks }}</h1>
+</div>
+
+<div class="card">
+<h3>Pending</h3>
+<h1>{{ pending_count }}</h1>
+</div>
+
+<div class="card">
+<h3>Completed</h3>
+<h1>{{ completed_count }}</h1>
+</div>
+
+<div class="card">
+<h3>Study Hours</h3>
+<h1>{{ total_hours }}</h1>
+</div>
+
+</div>
+
+<div class="card">
+<h2 style="margin-bottom:15px;">AI Suggestions</h2>
+
+{% for suggestion in suggestions %}
+<p style="padding:12px;background:#eef2ff;border-radius:12px;margin-bottom:10px;">
+{{ suggestion }}
+</p>
+{% empty %}
+<p>No suggestions yet.</p>
+{% endfor %}
+
+</div>
+
+<div class="card">
+<h2 style="margin-bottom:15px;">Quick Navigation</h2>
+
+<a href="/planner/" style="display:inline-block;padding:12px 18px;background:#2563eb;color:white;text-decoration:none;border-radius:12px;margin-right:10px;">Planner</a>
+
+<a href="/timetable/" style="display:inline-block;padding:12px 18px;background:#7c3aed;color:white;text-decoration:none;border-radius:12px;margin-right:10px;">Timetable</a>
+
+<a href="/analytics/" style="display:inline-block;padding:12px 18px;background:#10b981;color:white;text-decoration:none;border-radius:12px;">Analytics</a>
+
+</div>
+
+{% endblock %}

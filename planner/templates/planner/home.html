@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>StudySync AI — Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+/* ─── TOKENS ─────────────────────────────────────────────── */
+:root {
+  --bg:           #F7F6F3;
+  --surface:      #FFFFFF;
+  --surface-2:    #F0EFEb;
+  --border:       #E4E2DC;
+  --border-soft:  #EEECE7;
+  --text-primary: #1A1917;
+  --text-secondary:#6B6860;
+  --text-muted:   #A09D97;
+  --accent:       #3D6B4F;
+  --accent-light: #EBF2EE;
+  --accent-mid:   #C8DDD0;
+  --warn:         #8A6534;
+  --warn-light:   #F5EDE0;
+  --danger:       #8A3434;
+  --danger-light: #F5E0E0;
+  --info:         #34568A;
+  --info-light:   #E0E9F5;
+  --shadow-xs:    0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.03);
+  --shadow-sm:    0 2px 8px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04);
+  --shadow-md:    0 4px 16px rgba(0,0,0,0.07), 0 2px 6px rgba(0,0,0,0.04);
+  --radius-sm:    6px;
+  --radius-md:    10px;
+  --radius-lg:    14px;
+  --font-sans:    'DM Sans', sans-serif;
+  --font-serif:   'DM Serif Display', serif;
+  --nav-h:        60px;
+}
+
+/* ─── RESET ──────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-sans);
+  background: var(--bg);
+  color: var(--text-primary);
+  font-size: 14px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; cursor: pointer; }
+input, textarea, select { font-family: inherit; }
+
+/* ─── LAYOUT ─────────────────────────────────────────────── */
+.page-wrap {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+.section { padding: 48px 0; }
+.section + .section { border-top: 1px solid var(--border); }
+
+/* ─── NAVBAR ─────────────────────────────────────────────── */
+.navbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: var(--nav-h);
+  background: rgba(247,246,243,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  z-index: 100;
+}
+.navbar-inner {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 0 32px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex-shrink: 0;
+}
+.nav-logo-mark {
+  width: 28px; height: 28px;
+  background: var(--accent);
+  border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+}
+.nav-logo-mark svg { width: 14px; height: 14px; fill: #fff; }
+.nav-logo-text {
+  font-family: var(--font-serif);
+  font-size: 16px;
+  color: var(--text-primary);
+  letter-spacing: -0.3px;
+}
+.nav-logo-text span { color: var(--accent); }
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+}
+.nav-link {
+  padding: 6px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 13.5px;
+  font-weight: 400;
+  color: var(--text-secondary);
+  transition: background 0.15s, color 0.15s;
+  border: none;
+  background: none;
+}
+.nav-link:hover { background: var(--surface-2); color: var(--text-primary); }
+.nav-link.active { color: var(--text-primary); font-weight: 500; background: var(--surface-2); }
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: 16px;
+}
+.avatar {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: var(--accent-mid);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+.btn-logout {
+  padding: 6px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: none;
+  border: 1px solid var(--border);
+  transition: border-color 0.15s, color 0.15s;
+}
+.btn-logout:hover { border-color: var(--text-muted); color: var(--text-primary); }
+
+/* ─── MAIN CONTENT ───────────────────────────────────────── */
+main { padding-top: calc(var(--nav-h) + 40px); padding-bottom: 64px; }
+
+/* ─── SECTION HEADER ─────────────────────────────────────── */
+.section-header { margin-bottom: 24px; }
+.section-label {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 1.1px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+.section-title {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  color: var(--text-primary);
+  line-height: 1.25;
+}
+.section-subtitle {
+  font-size: 13.5px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+/* ─── CARD ───────────────────────────────────────────────── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xs);
+}
+.card-pad { padding: 24px; }
+
+/* ─── AI COACH ───────────────────────────────────────────── */
+.ai-coach-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+.ai-coach-header {
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid var(--border-soft);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.ai-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--accent-light);
+  border: 1px solid var(--accent-mid);
+  border-radius: 20px;
+  padding: 3px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: 0.4px;
+}
+.ai-badge-dot {
+  width: 6px; height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.5; transform: scale(0.8); }
+}
+.ai-coach-title {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+.ai-response-area {
+  padding: 20px 24px;
+  min-height: 88px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border-soft);
+}
+.ai-response-placeholder {
+  color: var(--text-muted);
+  font-size: 13.5px;
+  font-style: italic;
+  line-height: 1.7;
+}
+.ai-response-text {
+  color: var(--text-primary);
+  font-size: 13.5px;
+  line-height: 1.75;
+}
+.ai-input-area {
+  padding: 16px 24px;
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+}
+.ai-input {
+  flex: 1;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  font-size: 13.5px;
+  background: var(--bg);
+  color: var(--text-primary);
+  resize: none;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  height: 42px;
+  line-height: 1.5;
+}
+.ai-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(61,107,79,0.08); }
+.ai-input::placeholder { color: var(--text-muted); }
+.btn-primary {
+  padding: 10px 20px;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 500;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  transition: opacity 0.15s;
+  white-space: nowrap;
+  height: 42px;
+}
+.btn-primary:hover { opacity: 0.88; }
+
+/* ─── STAT CARDS ─────────────────────────────────────────── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px 22px;
+  box-shadow: var(--shadow-xs);
+}
+.stat-icon {
+  width: 32px; height: 32px;
+  border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 14px;
+  font-size: 15px;
+}
+.stat-icon.green  { background: var(--accent-light); }
+.stat-icon.amber  { background: var(--warn-light); }
+.stat-icon.blue   { background: var(--info-light); }
+.stat-icon.rose   { background: var(--danger-light); }
+.stat-value {
+  font-family: var(--font-serif);
+  font-size: 28px;
+  line-height: 1;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+.stat-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-weight: 400;
+}
+.stat-delta {
+  margin-top: 10px;
+  font-size: 11.5px;
+  color: var(--text-muted);
+}
+.stat-delta span { color: var(--accent); font-weight: 500; }
+
+/* ─── SMART PLANNER ──────────────────────────────────────── */
+.planner-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+.form-group { margin-bottom: 14px; }
+.form-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 5px;
+  letter-spacing: 0.2px;
+}
+.form-control {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 13.5px;
+  background: var(--bg);
+  color: var(--text-primary);
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  appearance: none;
+}
+.form-control:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(61,107,79,0.08); }
+.form-control::placeholder { color: var(--text-muted); }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.btn-add {
+  width: 100%;
+  padding: 10px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 500;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  margin-top: 4px;
+  transition: opacity 0.15s;
+}
+.btn-add:hover { opacity: 0.88; }
+
+/* Task list */
+.task-list { margin-top: 20px; }
+.task-list-header {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.task-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 14px;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  margin-bottom: 8px;
+  transition: border-color 0.15s;
+}
+.task-item:hover { border-color: var(--border); }
+.task-check {
+  width: 16px; height: 16px;
+  border: 1.5px solid var(--border);
+  border-radius: 4px;
+  flex-shrink: 0;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: border-color 0.15s, background 0.15s;
+}
+.task-check.done { background: var(--accent); border-color: var(--accent); }
+.task-check.done::after {
+  content: '';
+  display: block;
+  width: 8px; height: 5px;
+  border-left: 1.5px solid #fff;
+  border-bottom: 1.5px solid #fff;
+  transform: rotate(-45deg) translate(1px, -1px);
+}
+.task-name {
+  flex: 1;
+  font-size: 13.5px;
+  color: var(--text-primary);
+}
+.task-name.done { text-decoration: line-through; color: var(--text-muted); }
+.task-pill {
+  font-size: 11px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 20px;
+  flex-shrink: 0;
+}
+.pill-high   { background: var(--danger-light); color: var(--danger); }
+.pill-medium { background: var(--warn-light);   color: var(--warn); }
+.pill-low    { background: var(--accent-light);  color: var(--accent); }
+
+/* AI Suggestions */
+.suggestion-item {
+  display: flex;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  margin-bottom: 10px;
+  transition: border-color 0.15s;
+}
+.suggestion-item:hover { border-color: var(--accent-mid); }
+.sug-icon {
+  width: 32px; height: 32px;
+  flex-shrink: 0;
+  background: var(--accent-light);
+  border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+}
+.sug-body {}
+.sug-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+.sug-desc {
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* ─── TIMETABLE ──────────────────────────────────────────── */
+.timetable-wrap { overflow-x: auto; }
+.timetable {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 600px;
+}
+.timetable th {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding: 10px 16px;
+  text-align: left;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+.timetable td {
+  padding: 13px 16px;
+  font-size: 13.5px;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border-soft);
+  vertical-align: middle;
+}
+.timetable tr:last-child td { border-bottom: none; }
+.timetable tr:hover td { background: var(--bg); }
+.time-slot {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  font-weight: 500;
+  white-space: nowrap;
+}
+.subject-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 500;
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+.tag-math    { background: var(--info-light);   color: var(--info); }
+.tag-sci     { background: var(--accent-light);  color: var(--accent); }
+.tag-eng     { background: var(--warn-light);    color: var(--warn); }
+.tag-hist    { background: var(--danger-light);  color: var(--danger); }
+.tag-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+.duration-text { font-size: 12.5px; color: var(--text-muted); }
+
+/* ─── ANALYTICS ──────────────────────────────────────────── */
+.analytics-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.6fr;
+  gap: 20px;
+}
+.chart-container { position: relative; }
+.chart-canvas-wrap {
+  padding: 8px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.chart-legend {
+  margin-top: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+.legend-dot {
+  width: 8px; height: 8px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+/* ─── REMINDERS ──────────────────────────────────────────── */
+.reminders-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+.reminder-list { display: flex; flex-direction: column; gap: 10px; }
+.reminder-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  transition: border-color 0.15s;
+}
+.reminder-item:hover { border-color: var(--border); }
+.reminder-item.today-item { border-color: var(--accent-mid); background: var(--accent-light); }
+.reminder-time-col { flex-shrink: 0; text-align: right; }
+.reminder-time {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+.reminder-date {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 1px;
+}
+.reminder-divider {
+  width: 1px;
+  background: var(--border);
+  align-self: stretch;
+  flex-shrink: 0;
+  margin: 0 2px;
+}
+.reminder-body { flex: 1; }
+.reminder-title {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+.reminder-sub {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+/* ─── FOOTER ─────────────────────────────────────────────── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 28px 32px;
+  text-align: center;
+}
+.footer-text {
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+.footer-text a { color: var(--text-secondary); }
+.footer-text a:hover { color: var(--text-primary); }
+
+/* ─── UTILS ──────────────────────────────────────────────── */
+.flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.divider-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin: 18px 0 12px;
+}
+.divider-label::before, .divider-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border-soft);
+}
+
+/* ─── RESPONSIVE ─────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .stats-grid        { grid-template-columns: 1fr 1fr; }
+  .planner-grid      { grid-template-columns: 1fr; }
+  .analytics-grid    { grid-template-columns: 1fr; }
+  .reminders-grid    { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  .stats-grid        { grid-template-columns: 1fr; }
+  .page-wrap, footer { padding-left: 20px; padding-right: 20px; }
+  .nav-links         { display: none; }
+}
+
+/* FIX TABLE ALIGNMENT */
+.timetable th,
+.timetable td {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.timetable th:first-child,
+.timetable td:first-child {
+  text-align: left;
+  padding-left: 20px;
+}
+
+.timetable td:last-child {
+  text-align: center;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.timetable tr {
+  height: 60px;
+}
+
+.subject-tag {
+  justify-content: center;
+  display: inline-flex;
+}
+
+/* OPTIONAL CLEAN LOOK */
+.timetable tbody tr:nth-child(even) {
+  background: var(--surface-2);
+}
+
+
+/* PAGE WIDTH + TIMETABLE FIX */
+.page-wrap {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+#timetable,
+#analytics,
+#reminders,
+#planner,
+#coach,
+#overview {
+  max-width: 1140px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.timetable-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.timetable {
+  width: 100%;
+  table-layout: fixed;
+}
+
+.timetable th,
+.timetable td {
+  padding: 14px 10px;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.analytics-grid {
+  max-width: 1140px;
+  margin: 0 auto;
+}
+
+.chart-canvas-wrap canvas {
+  max-width: 260px !important;
+  max-height: 260px !important;
+}
+
+
+/* ANALYTICS SIZE FIX */
+#analytics {
+  max-width: 1140px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.analytics-grid {
+  display: grid;
+  grid-template-columns: 420px 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+.analytics-grid .card {
+  min-height: 330px;
+  overflow: hidden;
+}
+
+#pieChart {
+  max-width: 240px !important;
+  max-height: 240px !important;
+  margin: 0 auto;
+  display: block;
+}
+
+#barChart {
+  max-height: 260px !important;
+}
+
+@media(max-width:900px){
+  .analytics-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* FIX SMART PLANNER ALIGNMENT */
+.planner-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  justify-content: center;
+}
+
+.planner-grid > div {
+  max-width: 520px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* form full width inside card */
+.card.card-pad {
+  width: 100%;
+}
+
+/* center section header nicely */
+#planner .section-header {
+  text-align: center;
+}
+
+</style>
+</head>
+<body>
+
+<!-- ── NAVBAR ─────────────────────────────────────────────── -->
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="#" class="nav-logo">
+      <div class="nav-logo-mark">
+        <svg viewBox="0 0 16 16"><path d="M2 2h5v5H2zM9 2h5v5H9zM2 9h5v5H2zM11.5 9v2h-2.5v1.5h2.5V15H13v-2.5h2.5V11H13V9z"/></svg>
+      </div>
+      <span class="nav-logo-text">Study<span>Sync</span> AI</span>
+    </a>
+    <nav class="nav-links">
+      <a href="#coach"     class="nav-link active">AI Coach</a>
+      <a href="#overview"  class="nav-link">Overview</a>
+      <a href="#planner"   class="nav-link">Planner</a>
+      <a href="#timetable" class="nav-link">Timetable</a>
+      <a href="#analytics" class="nav-link">Analytics</a>
+      <a href="#reminders" class="nav-link">Reminders</a>
+    </nav>
+    <div class="nav-right">
+      <div class="avatar">{{ request.user.username|slice:":2"|upper }}</div>
+      <form method="POST" action="{% url 'logout' %}" style="display:inline;">
+  {% csrf_token %}
+  <button type="submit" class="btn-logout">Log out</button>
+</form>
+</form>
+    </div>
+  </div>
+</nav>
+
+<!-- ── MAIN ───────────────────────────────────────────────── -->
+<main>
+<div class="page-wrap">
+
+  <!-- ── AI COACH ──────────────────────────────────────── -->
+  <section id="coach" class="section" style="padding-top:0;">
+    <div class="section-header">
+      <div class="section-label">Assistant</div>
+      <h2 class="section-title">AI Study Coach</h2>
+      <p class="section-subtitle">Ask anything about your study plan, schedule, or learning strategy.</p>
+    </div>
+    <div class="ai-coach-card">
+      <div class="ai-coach-header">
+        <div class="ai-badge">
+          <div class="ai-badge-dot"></div>
+          Active
+        </div>
+        <span class="ai-coach-title">StudySync Coach · Powered by ML</span>
+      </div>
+      <div class="ai-response-area" id="ai-response">
+  {% if coach_reply %}
+  <p class="ai-response-text">{{ coach_reply }}</p>
+  {% else %}
+  <p class="ai-response-placeholder">Your coach response will appear here. Ask anything about stress, focus, exams, or planning.</p>
+  {% endif %}
+</div>
+
+<form method="POST" class="ai-input-area">
+  {% csrf_token %}
+  <textarea class="ai-input" name="coach_message" placeholder="Ask your study coach anything..." rows="1"></textarea>
+  <button class="btn-primary" type="submit">Ask Coach</button>
+</form>
+    </div>
+  </section>
+
+  <!-- ── DASHBOARD OVERVIEW ─────────────────────────────── -->
+  <section id="overview" class="section">
+    <div class="section-header">
+      <div class="section-label">Summary</div>
+      <h2 class="section-title">Dashboard Overview</h2>
+    </div>
+    <div class="stats-grid">
+  <div class="stat-card"><div class="stat-icon green"></div><div class="stat-value">{{ total_tasks }}</div><div class="stat-label">Total Tasks</div><div class="stat-delta">Active tasks in planner</div></div>
+  <div class="stat-card"><div class="stat-icon amber"></div><div class="stat-value">{{ total_hours }}</div><div class="stat-label">Study Hours</div><div class="stat-delta">Total planned hours</div></div>
+  <div class="stat-card"><div class="stat-icon blue"></div><div class="stat-value">{{ completed_count }}</div><div class="stat-label">Completed</div><div class="stat-delta">Finished tasks</div></div>
+  <div class="stat-card"><div class="stat-icon rose"></div><div class="stat-value">{{ pending_count }}</div><div class="stat-label">Pending</div><div class="stat-delta">Needs attention</div></div>
+</div>
+</section>
+
+  <!-- ── SMART PLANNER ──────────────────────────────────── -->
+  <section id="planner" class="section">
+    <div class="section-header">
+      <div class="section-label">Planning</div>
+      <h2 class="section-title">Smart Planner</h2>
+      <p class="section-subtitle">Manage your tasks and let AI suggest the best study order.</p>
+    </div>
+    <div class="planner-grid">
+      <!-- LEFT: Task Input + List -->
+      <div>
+        <div class="card card-pad">
+  <p style="font-size:13px;font-weight:600;color:var(--text-secondary);margin-bottom:16px;letter-spacing:0.2px;">Add New Task</p>
+  <form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button class="btn-add" type="submit">Add Task</button>
+  </form>
+</div>
+
+<div class="task-list">
+  <div class="task-list-header">Your Tasks</div>
+  {% for task in tasks %}
+  <div class="task-item">
+    <a class="task-check {% if task.completed %}done{% endif %}" href="{% url 'complete_task' task.id %}"></a>
+    <span class="task-name {% if task.completed %}done{% endif %}">{{ task.subject }} — {{ task.hours }}h</span>
+    <span class="task-pill pill-{{ task.priority|lower }}">{{ task.priority }}</span>
+    <a class="btn-logout" href="{% url 'delete_task' task.id %}">Delete</a>
+  </div>
+  {% empty %}
+  <p class="section-subtitle">No tasks yet. Add your first study task above.</p>
+  {% endfor %}
+</div>
+</div>
+      </div>
+
+      <!-- RIGHT: AI Suggestions -->
+      <div>
+        <div class="card card-pad" style="height:100%;">
+  <div class="flex-between" style="margin-bottom:18px;">
+    <p style="font-size:13px;font-weight:600;color:var(--text-secondary);letter-spacing:0.2px;">ML Suggestions</p>
+    <div class="ai-badge" style="font-size:10.5px;"><div class="ai-badge-dot"></div>ML-Powered</div>
+  </div>
+
+  {% for suggestion in suggestions %}
+  <div class="suggestion-item">
+    <div class="sug-body">
+      <div class="sug-title">Recommendation</div>
+      <div class="sug-desc">{{ suggestion }}</div>
+    </div>
+  </div>
+  {% empty %}
+  <p class="section-subtitle">Add tasks to get ML suggestions.</p>
+  {% endfor %}
+</div>
+</div>
+</div>
+</section>
+
+  <!-- ── TIMETABLE ──────────────────────────────────────── -->
+  <section id="timetable" class="section">
+    <div class="section-header">
+      <div class="section-label">Schedule</div>
+      <h2 class="section-title">Weekly Timetable</h2>
+      <p class="section-subtitle">Your structured study schedule for the week.</p>
+    </div>
+    <div class="card">
+      <div class="timetable-wrap">
+        
+<table class="timetable">
+  <thead>
+    <tr>
+      <th>Time Slot</th>
+      <th>Monday</th>
+      <th>Tuesday</th>
+      <th>Wednesday</th>
+      <th>Thursday</th>
+      <th>Friday</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {% for row in smart_timetable %}
+    <tr>
+      <td class="time-slot">{{ row.time }}</td>
+
+      <td>{% if row.monday %}<span class="subject-tag tag-sci"><span class="tag-dot"></span>{{ row.monday }}</span>{% else %}—{% endif %}</td>
+
+      <td>{% if row.tuesday %}<span class="subject-tag tag-math"><span class="tag-dot"></span>{{ row.tuesday }}</span>{% else %}—{% endif %}</td>
+
+      <td>{% if row.wednesday %}<span class="subject-tag tag-eng"><span class="tag-dot"></span>{{ row.wednesday }}</span>{% else %}—{% endif %}</td>
+
+      <td>{% if row.thursday %}<span class="subject-tag tag-hist"><span class="tag-dot"></span>{{ row.thursday }}</span>{% else %}—{% endif %}</td>
+
+      <td>{% if row.friday %}<span class="subject-tag tag-sci"><span class="tag-dot"></span>{{ row.friday }}</span>{% else %}—{% endif %}</td>
+
+      <td class="duration-text">{{ row.status }}</td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="7">No timetable generated yet. Add pending tasks first.</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── ANALYTICS ──────────────────────────────────────── -->
+  <section id="analytics" class="section">
+    <div class="section-header">
+      <div class="section-label">Insights</div>
+      <h2 class="section-title">Study Analytics</h2>
+      <p class="section-subtitle">Visual breakdown of how you're spending your study time.</p>
+    </div>
+    <div class="analytics-grid">
+      <!-- Pie -->
+      <div class="card card-pad">
+        <p style="font-size:13px;font-weight:600;color:var(--text-secondary);margin-bottom:16px;letter-spacing:0.2px;">Subject Distribution</p>
+        <div class="chart-canvas-wrap">
+          <canvas id="pieChart" width="200" height="200"></canvas>
+        </div>
+        <div class="chart-legend" id="pie-legend"></div>
+      </div>
+      <!-- Bar -->
+      <div class="card card-pad">
+        <p style="font-size:13px;font-weight:600;color:var(--text-secondary);margin-bottom:16px;letter-spacing:0.2px;">Hours Studied — This Week</p>
+        <div style="position:relative;height:220px;">
+          <canvas id="barChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── REMINDERS ──────────────────────────────────────── -->
+  <section id="reminders" class="section">
+    <div class="section-header">
+      <div class="section-label">Alerts</div>
+      <h2 class="section-title">Reminders</h2>
+    </div>
+    <div class="reminders-grid">
+      <!-- Upcoming -->
+      <div>
+        <div class="task-list-header" style="margin-bottom:12px;">Upcoming</div>
+        <div class="reminder-list">
+{% for task in tasks %}
+{% if not task.completed %}
+<div class="reminder-item">
+  <div class="reminder-time-col">
+    <div class="reminder-time">{{ task.deadline|date:"d M" }}</div>
+    <div class="reminder-date">{{ task.priority }}</div>
+  </div>
+  <div class="reminder-divider"></div>
+  <div class="reminder-body">
+    <div class="reminder-title">{{ task.subject }}</div>
+    <div class="reminder-sub">Deadline task · {{ task.hours }}h</div>
+  </div>
+</div>
+{% endif %}
+{% empty %}
+<p class="section-subtitle">No upcoming deadlines.</p>
+{% endfor %}
+</div>
+</div>
+<!-- Today -->
+      <div>
+        <div class="task-list-header" style="margin-bottom:12px;">Today's Highlights</div>
+        <div class="reminder-list">
+{% for task in tasks %}
+{% if task.deadline == today and not task.completed %}
+<div class="reminder-item today-item">
+  <div class="reminder-time-col">
+    <div class="reminder-time">Today</div>
+    <div class="reminder-date">Pending</div>
+  </div>
+  <div class="reminder-divider"></div>
+  <div class="reminder-body">
+    <div class="reminder-title">{{ task.subject }}</div>
+    <div class="reminder-sub">Study today · {{ task.hours }}h</div>
+  </div>
+</div>
+{% endif %}
+{% empty %}
+<p class="section-subtitle">No tasks due today.</p>
+{% endfor %}
+</div>
+</div>
+</div>
+</section>
+
+</div>
+</main>
+
+<!-- ── FOOTER ─────────────────────────────────────────────── -->
+<footer>
+  <p class="footer-text">
+    &copy; 2025 <a href="#">StudySync AI</a> &nbsp;·&nbsp;
+    <a href="#">Privacy</a> &nbsp;·&nbsp;
+    <a href="#">Terms</a> &nbsp;·&nbsp;
+    Built for focused learners
+  </p>
+</footer>
+
+<!-- ── SCRIPTS ────────────────────────────────────────────── -->
+<script>
+const pieData = {
+  labels: ['Pending', 'Completed'],
+  datasets:[{
+    data:[{{ pending_count }}, {{ completed_count }}],
+    backgroundColor:['#8A6534','#3D6B4F'],
+    borderColor:'#FFFFFF',
+    borderWidth:3,
+    hoverOffset:6
+  }]
+};
+
+new Chart(document.getElementById('pieChart'),{
+  type:'doughnut',
+  data: pieData,
+  options:{
+    cutout:'68%',
+    plugins:{ legend:{ display:true } }
+  }
+});
+
+new Chart(document.getElementById('barChart'),{
+  type:'bar',
+  data:{
+    labels:{{ subjects|safe }},
+    datasets:[{
+      label:'Study Hours',
+      data:{{ hours|safe }},
+      backgroundColor:'#3D6B4F',
+      borderRadius:5,
+      borderSkipped:false
+    }]
+  },
+  options:{
+    responsive:true,
+    maintainAspectRatio:false,
+    scales:{
+      x:{ grid:{ display:false }},
+      y:{ beginAtZero:true, grid:{ color:'#EEECE7' }}
+    },
+    plugins:{ legend:{ display:false }}
+  }
+});
+
+const navLinks = document.querySelectorAll('.nav-link');
+const sections = document.querySelectorAll('section[id]');
+const observer = new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      navLinks.forEach(l=>l.classList.remove('active'));
+      const active = document.querySelector(`.nav-link[href="#${entry.target.id}"]`);
+      if(active) active.classList.add('active');
+    }
+  });
+},{threshold:0.4, rootMargin:'-60px 0px 0px 0px'});
+sections.forEach(sec=>observer.observe(sec));
+</script>
+</body>
+</html>

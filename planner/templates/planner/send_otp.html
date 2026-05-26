@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>OTP Login | StudySync AI</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Arial,sans-serif}
+body{
+min-height:100vh;display:flex;align-items:center;justify-content:center;
+background:linear-gradient(135deg,#020617,#111827);
+color:white;padding:20px;
+}
+.card{
+width:100%;max-width:430px;
+background:rgba(255,255,255,.08);
+border:1px solid rgba(255,255,255,.18);
+backdrop-filter:blur(22px);
+border-radius:28px;
+padding:38px;
+box-shadow:0 30px 80px rgba(0,0,0,.45);
+}
+.logo{font-size:26px;font-weight:900;margin-bottom:25px;color:#a5b4fc}
+h1{font-size:34px;margin-bottom:10px}
+p{color:#cbd5e1;line-height:1.6;margin-bottom:25px}
+input{
+width:100%;padding:15px;border-radius:15px;border:1px solid rgba(255,255,255,.2);
+background:rgba(255,255,255,.1);color:white;font-size:16px;outline:none;margin-bottom:15px;
+}
+input:focus{border-color:#818cf8;box-shadow:0 0 0 4px rgba(129,140,248,.15)}
+button{
+width:100%;padding:15px;border:0;border-radius:15px;
+background:linear-gradient(135deg,#6366f1,#8b5cf6);
+color:white;font-weight:900;font-size:16px;cursor:pointer;
+}
+a{display:block;text-align:center;margin-top:18px;color:#93c5fd}
+</style>
+</head>
+<body>
+<div class="card">
+<div class="logo">⚡ StudySync AI</div>
+<h1>Login with OTP</h1>
+<p>Enter your phone number and receive a secure one-time password.</p>
+
+<form method="POST">
+{% csrf_token %}
+<input type="text" name="phone" placeholder="+91XXXXXXXXXX" required>
+<button type="submit">Send OTP</button>
+</form>
+
+<a href="{% url 'login' %}">Login with password</a>
+</div>
+</body>
+</html>

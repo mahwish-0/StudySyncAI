@@ -1,0 +1,94 @@
+{% extends 'planner/base.html' %}
+
+{% block content %}
+
+<h1 style="font-size:34px;font-weight:800;margin-bottom:20px;">
+Planner
+</h1>
+
+<div style="display:grid;grid-template-columns:380px 1fr;gap:20px;">
+
+<div class="card">
+<h2 style="margin-bottom:15px;">Add Study Task</h2>
+
+<form method="POST">
+{% csrf_token %}
+{{ form.as_p }}
+
+<button type="submit"
+style="
+width:100%;
+padding:14px;
+background:#2563eb;
+color:white;
+border:none;
+border-radius:12px;
+font-weight:700;
+cursor:pointer;
+">
+Generate Smart Plan
+</button>
+
+</form>
+</div>
+
+<div class="card">
+<h2 style="margin-bottom:15px;">Your Tasks</h2>
+
+{% for task in tasks %}
+<div style="
+padding:15px;
+border:1px solid #e5e7eb;
+border-radius:14px;
+margin-bottom:12px;
+background:#f8fafc;
+">
+
+<h3>{{ task.subject }}</h3>
+
+<p>
+Hours: {{ task.hours }} |
+Deadline: {{ task.deadline }} |
+Priority: <b>{{ task.priority }}</b>
+</p>
+
+<div style="margin-top:10px;">
+
+{% if not task.completed %}
+<a href="/complete/{{ task.id }}/"
+style="
+padding:10px 14px;
+background:#10b981;
+color:white;
+text-decoration:none;
+border-radius:10px;
+margin-right:8px;
+">
+Done
+</a>
+{% endif %}
+
+<a href="/delete/{{ task.id }}/"
+style="
+padding:10px 14px;
+background:#ef4444;
+color:white;
+text-decoration:none;
+border-radius:10px;
+">
+Delete
+</a>
+
+</div>
+
+</div>
+
+{% empty %}
+<p>No tasks yet.</p>
+{% endfor %}
+
+</div>
+
+</div>
+
+{% endblock %}

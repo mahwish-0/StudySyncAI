@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login — StudySync AI</title>
+
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+body{
+font-family:'DM Sans',sans-serif;
+background:#0f172a;
+color:white;
+display:flex;
+align-items:center;
+justify-content:center;
+min-height:100vh;
+margin:0;
+}
+
+.card{
+background:#111827;
+padding:40px;
+border-radius:16px;
+width:360px;
+box-shadow:0 10px 40px rgba(0,0,0,0.4);
+}
+
+h2{
+margin-bottom:20px;
+font-weight:600;
+}
+
+input{
+width:100%;
+padding:12px;
+margin-bottom:12px;
+border:none;
+border-radius:8px;
+background:#1f2937;
+color:white;
+}
+
+button{
+width:100%;
+padding:12px;
+border:none;
+border-radius:8px;
+background:#06b6d4;
+color:white;
+font-weight:600;
+cursor:pointer;
+}
+
+button:hover{
+background:#0891b2;
+}
+
+.link{
+margin-top:12px;
+font-size:14px;
+text-align:center;
+}
+
+a{color:#7c3aed;text-decoration:none;}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+<h2>Login</h2>
+
+<form method="POST">
+{% csrf_token %}
+{{ form.as_p }}
+
+<button type="submit">Login</button>
+</form>
+
+<div class="link">
+Don't have an account? <a href="{% url 'signup' %}">Sign up</a>
+</div>
+
+<div class="link">
+<a href="{% url 'send_otp' %}">Login with OTP</a>
+</div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Signup | StudySync AI</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+min-height:100vh;display:flex;align-items:center;justify-content:center;
+background:#F7F6F3;color:#1A1917;font-family:'DM Sans',sans-serif;padding:24px;
+}
+.wrapper{
+width:100%;max-width:900px;display:grid;grid-template-columns:1fr 1fr;
+background:#fff;border:1px solid #E4E2DC;border-radius:22px;
+box-shadow:0 10px 36px rgba(0,0,0,.07);overflow:hidden;
+}
+.left{padding:34px}
+.right{background:#EBF2EE;padding:42px;display:flex;flex-direction:column;justify-content:center}
+.logo{font-family:'DM Serif Display',serif;font-size:28px;margin-bottom:8px}
+.logo span{color:#3D6B4F}
+h1{font-family:'DM Serif Display',serif;font-size:36px;line-height:1.15;margin-bottom:14px}
+.sub,p{color:#6B6860;line-height:1.7}
+.sub{margin-bottom:24px}
+form p{margin-bottom:13px}
+label{display:block;font-size:13px;font-weight:600;color:#6B6860;margin-bottom:6px}
+input{
+width:100%;padding:11px 13px;border-radius:10px;border:1px solid #E4E2DC;
+background:#F7F6F3;color:#1A1917;font-size:14px;outline:none;
+}
+input:focus{border-color:#3D6B4F;box-shadow:0 0 0 3px rgba(61,107,79,.08)}
+.helptext, ul{font-size:12px;color:#A09D97;line-height:1.5;margin-top:5px}
+button{
+width:100%;padding:12px;border:none;border-radius:10px;background:#3D6B4F;
+color:white;font-weight:700;margin-top:8px;cursor:pointer;
+}
+.links{text-align:center;margin-top:18px;color:#6B6860;font-size:14px}
+.links a{color:#3D6B4F;font-weight:700}
+.feature{background:#fff;border:1px solid #C8DDD0;border-radius:12px;padding:12px 14px;margin-top:10px;color:#3D6B4F;font-weight:600}
+@media(max-width:800px){.wrapper{grid-template-columns:1fr}.right{display:none}}
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <div class="left">
+    <div class="logo">Study<span>Sync</span> AI</div>
+    <p class="sub">Create your personalized study workspace.</p>
+
+    <form method="POST">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit">Create Account</button>
+    </form>
+
+    <div class="links">
+      Already have an account? <a href="{% url 'login' %}">Login</a>
+    </div>
+  </div>
+
+  <div class="right">
+    <h1>Plan better. Study calmly.</h1>
+    <p>Organize tasks, predict priorities, and generate study plans with a clean academic dashboard.</p>
+    <div class="feature">ML priority prediction</div>
+    <div class="feature">Smart timetable generation</div>
+    <div class="feature">Progress analytics</div>
+  </div>
+</div>
+</body>
+</html>
