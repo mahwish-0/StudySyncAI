@@ -54,34 +54,18 @@ It helps students:
 
 ## Platform Preview
 
-### User Registration
-
 <p align="center">
-  <img src="assets/signup.jpeg" width="80%">
+  <img src="assets/signup.jpeg" width="45%">
+  <img src="assets/task.jpeg" width="45%">
 </p>
 
-### Task Management
-
 <p align="center">
-  <img src="assets/task.jpeg" width="80%">
+  <img src="assets/study-planner.jpeg" width="45%">
+  <img src="assets/ai-assistant.jpeg" width="45%">
 </p>
 
-### Study Planner
-
 <p align="center">
-  <img src="assets/study-planner.jpeg" width="80%">
-</p>
-
-### AI Assistant
-
-<p align="center">
-  <img src="assets/ai-assistant.jpeg" width="80%">
-</p>
-
-### Analytics Dashboard
-
-<p align="center">
-  <img src="assets/analytics.jpeg" width="80%">
+  <img src="assets/analytics.jpeg" width="60%">
 </p>
 
 ---
